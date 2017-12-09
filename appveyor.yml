@@ -1,0 +1,21 @@
+version: 1.0.{build}
+image: Visual Studio 2017
+
+build_script:
+- ps: >- 
+    choco install dotnet.script
+- cmd: >-  
+    cd build
+
+    refreshenv
+
+    SET PATH=C:\Ruby24\bin;%PATH%
+    
+    dotnet script build.csx
+    
+test: off
+environment:
+    GITHUB_REPO_TOKEN:
+        secure: FSPXTPuTgFMaZA7DubJoX217SkWhFLN2BGqCCi4gBux967eFtwkhbrafm7ay8cP2
+    NUGET_APIKEY:
+        secure: ynFcRQX0oim3DdR5Y8s4BtynS/NYRG059GvWGckqhpZGNZVvhvvn5UUWgsyPKLKm
