@@ -371,12 +371,17 @@ public static class ScriptUnit
             {
                 var name = $"{testResult.Fixture}.{testResult.Name}";
                 Console.WriteLine($"{name.PadRight(maxWidth, ' ')} {(int)testResult.Duration.TotalMilliseconds}ms");
+                
                 if (testResult.TestCaseResults.Length > 1 && testResult.TestCaseResults[0].Arguments.Length > 0)
                 {
                     foreach (var testCase in testResult.TestCaseResults)
                     {
                         FormatTestCase(testResult, testCase);
                     }
+                }
+                else
+                {
+                    WriteOutput(testResult.TestCaseResults.Single());
                 }
             }
 
@@ -407,6 +412,11 @@ public static class ScriptUnit
                     Console.WriteLine($"{name.PadRight(maxWidth, ' ')} {(int)testCase.Duration.TotalMilliseconds}ms");
                 }
 
+                WriteOutput(testCase);
+            }
+
+            void WriteOutput(TestCaseResult testCase)
+            {
                 if (!string.IsNullOrWhiteSpace(testCase.StandardOut))
                 {
                     Console.WriteLine("Standard Out");
