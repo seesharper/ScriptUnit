@@ -4,7 +4,7 @@
 using FluentAssertions;
 
 using static ScriptUnit;
-await AddTestsFrom<ScriptUnitTests>().AddFilter(m => m.Name == "ShouldReportStandardOutAndStandardError").Execute();
+await AddTestsFrom<ScriptUnitTests>().Execute();
 
 public class ScriptUnitTests
 {
