@@ -485,14 +485,12 @@ public static class ScriptUnit
 
             public static void Release()
             {
-                if (_captureCount == 1)
-                {
-                    _captureCount--;
+                _captureCount--;
+                if (_captureCount == 0)
+                {                    
                     Console.SetOut(_oldStandardOutWriter);
                     Console.SetError(_oldStandardErrorWriter);
                 }
-
-                _captureCount--;
             }
 
             public static void Clear()
