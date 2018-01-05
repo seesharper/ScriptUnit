@@ -56,6 +56,14 @@ public class ScriptUnitTests
         await AddTestsFrom<DataDrivenTests>()
         .WithSummaryFormatter(summary => summary.TestResults.Single().TestCaseResults.Count().Should().Be(3)).Execute();
     }
+
+    public async Task ShouldReportStandardOutAndStandardError()
+    {
+        await AddTestsFrom<ConsoleTests>().Execute();
+        var r = TestContext.StandardOut;
+        TestContext.StandardOut.Should().Contain("This is the output from stdOut");
+        TestContext.StandardOut.Should().Contain("This is the output from stdErr");
+    }
 }
 
 public class ExceptionTests
