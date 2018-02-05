@@ -14,7 +14,7 @@ public class CalculatorTests
     {
         var result = Add(2,2);        
         result.Should().Be(4);
-    }
+    }   
 
     [Arguments(1,2,3)]
     [Arguments(2,3,5)]
