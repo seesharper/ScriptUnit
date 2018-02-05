@@ -14,14 +14,7 @@ public class CalculatorTests
     {
         var result = Add(2,2);        
         result.Should().Be(4);
-    }
-
-    public async Task FailingCalculatorTest()
-    {
-        var result = Add(2,2);        
-        result.Should().Be(5);
-    }
-
+    }   
 
     [Arguments(1,2,3)]
     [Arguments(2,3,5)]

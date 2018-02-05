@@ -10,8 +10,8 @@ public class ScriptUnitTests
 {
     public async Task ShouldReportInnerException()
     {
-        await AddTestsFrom<ExceptionTests>()
-                .WithSummaryFormatter(summary => summary.TestResults.Single().TestCaseResults.Single().Exception.Should().BeOfType<Exception>())
+        await AddTestsFrom<ExceptionTests>()                
+                .WithSummaryFormatter(summary => summary.TestResults.SelectMany(tr => tr.TestCaseResults).Should().OnlyContain(tc => tc.Exception is Exception))
                 .Execute();
     }
 
@@ -69,6 +69,11 @@ public class ScriptUnitTests
 public class ExceptionTests
 {
     public void FailingTest()
+    {
+        throw new Exception();
+    }
+
+    public Task FailingTestAsync()
     {
         throw new Exception();
     }
