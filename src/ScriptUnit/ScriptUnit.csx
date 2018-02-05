@@ -17,7 +17,7 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 ******************************************************************************
-    ScriptUnit version 0.1.0
+    ScriptUnit version 0.1.3
     https://github.com/seesharper/ScriptUnit
     http://twitter.com/bernhardrichter
 ******************************************************************************/
@@ -279,6 +279,10 @@ public static class ScriptUnit
             catch (TargetInvocationException targetInvocationException)
             {
                 exception = targetInvocationException.InnerException;
+            }
+            catch (Exception ex)
+            {
+                exception = ex;
             }
             finally
             {
