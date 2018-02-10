@@ -3,7 +3,7 @@
   <metadata>
     <id>ScriptUnit</id>
     <title>ScriptUnit</title>
-    <version>0.1.3</version>
+    <version>0.1.4</version>
     <description>A super simple C# script test runner</description>
     <authors>Bernhard Richter</authors>
     <owners>Bernhard Richter</owners>
