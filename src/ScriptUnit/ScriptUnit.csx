@@ -56,6 +56,15 @@ public static class ScriptUnit
     }
 
     /// <summary>
+    /// Adds top level test methods.
+    /// </summary>
+    /// <returns>The <see cref="TestRunner"/> used to execute the tests.</returns>
+    public static TestRunner AddTopLevelTests()
+    {
+        return new TestRunner().AddTopLevelTests();
+    }
+
+    /// <summary>
     /// A test runner capable of running unit tests.
     /// </summary>
     public class TestRunner
