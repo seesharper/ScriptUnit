@@ -16,6 +16,9 @@ File.Copy(Path.Combine(scriptFolder,"ScriptUnit.nuspec"),Path.Combine(tempFolder
 string pathToUnitTests = Path.Combine(scriptFolder,"..","src","ScriptUnit.Tests","ScriptUnitTests.csx");
 Command.Execute("dotnet", $"script {pathToUnitTests}");
 
+string pathToTopLevelTests = Path.Combine(scriptFolder,"..","src","ScriptUnit.Tests","TopLevelTests.csx");
+Command.Execute("dotnet", $"script {pathToTopLevelTests}");
+
 Command.Execute("nuget",$"pack {Path.Combine(tempFolder,"ScriptUnit.nuspec")} -OutputDirectory {tempFolder}");
 
 
