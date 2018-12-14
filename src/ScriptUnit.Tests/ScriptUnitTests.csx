@@ -1,4 +1,3 @@
-#! "netcoreapp2.0"
 #load "../ScriptUnit/ScriptUnit.csx"
 #r "nuget:FluentAssertions, 4.19.4"
 using FluentAssertions;
@@ -10,7 +9,7 @@ public class ScriptUnitTests
 {
     public async Task ShouldReportInnerException()
     {
-        await AddTestsFrom<ExceptionTests>()                
+        await AddTestsFrom<ExceptionTests>()
                 .WithSummaryFormatter(summary => summary.TestResults.SelectMany(tr => tr.TestCaseResults).Should().OnlyContain(tc => tc.Exception is Exception))
                 .Execute();
     }
@@ -18,41 +17,41 @@ public class ScriptUnitTests
     public async Task ShouldCaptureStandardOutAndStandardError()
     {
         await AddTestsFrom<ConsoleTests>()
-                .WithSummaryFormatter(summary => 
+                .WithSummaryFormatter(summary =>
                 {
                     summary.TestResults.Single().TestCaseResults.Single().StandardOut.Should().Be("This is the output from stdOut");
                     summary.TestResults.Single().TestCaseResults.Single().StandardError.Should().Be("This is the output from stdErr");
                 })
-            .Execute();                  
+            .Execute();
     }
 
     public async Task ShouldCallDisposeMethod()
     {
         await AddTestsFrom<DisposableTests>().Execute();
-        DisposableTests.Disposed.Should().BeTrue();        
+        DisposableTests.Disposed.Should().BeTrue();
     }
 
     public async Task ShouldReportFixtureNameWithOutSubMissionPrefix()
     {
         await AddTestsFrom<ConsoleTests>()
-            .WithSummaryFormatter(summary => 
+            .WithSummaryFormatter(summary =>
             {
-               summary.TestResults.Single().Fixture.Should().NotStartWith("Submission#0+");                
+               summary.TestResults.Single().Fixture.Should().NotStartWith("Submission#0+");
             })
-            .Execute();                
+            .Execute();
     }
 
     public async Task ShouldRunTestsInParallel()
-    {                
+    {
             await AddTestsFrom<LongRunningTests>()
         .AddTestsFrom<AnotherLongRunningTests>()
         .WithSummaryFormatter(summary => summary.TotalDuration.TotalMilliseconds.Should().BeLessThan(1000))
         .ExecuteInParallel();
-        
+
     }
 
     public async Task ShouldExecuteTestsWithParameters()
-    {   
+    {
         await AddTestsFrom<DataDrivenTests>()
         .WithSummaryFormatter(summary => summary.TestResults.Single().TestCaseResults.Count().Should().Be(3)).Execute();
     }
@@ -85,8 +84,8 @@ public class ConsoleTests
     {
         Console.Out.Write("This is the output from stdOut");
         await Task.Delay(100);
-        Console.Error.Write("This is the output from stdErr");       
-        var test = TestContext.StandardOut;                         
+        Console.Error.Write("This is the output from stdErr");
+        var test = TestContext.StandardOut;
     }
 }
 

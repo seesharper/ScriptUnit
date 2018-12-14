@@ -33,6 +33,13 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+
+Action action = () => Dummy();
+
+private void Dummy(){}
+
+ScriptUnit.TestRunner.Initialize(action.Target);
+
 /// <summary>
 /// Serves as a namespace since there are no namespaces in scripts.
 /// </summary>
@@ -49,6 +56,15 @@ public static class ScriptUnit
     }
 
     /// <summary>
+    /// Adds top level test methods.
+    /// </summary>
+    /// <returns>The <see cref="TestRunner"/> used to execute the tests.</returns>
+    public static TestRunner AddTopLevelTests()
+    {
+        return new TestRunner().AddTopLevelTests();
+    }
+
+    /// <summary>
     /// A test runner capable of running unit tests.
     /// </summary>
     public class TestRunner
@@ -62,6 +78,17 @@ public static class ScriptUnit
         private readonly Func<MethodInfo, object[][]> _argumentProvider;
 
         private readonly Func<object[], string> _argumentsFormatter;
+
+        private static object _submission;
+
+        /// <summary>
+        /// Initialize the runner with the submission instance to support top level test methods.
+        /// </summary>
+        /// <param name="submission"></param>
+        internal static void Initialize(object submission)
+        {
+            _submission = submission;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestRunner"/> class.
@@ -149,16 +176,31 @@ public static class ScriptUnit
         }
 
         /// <summary>
+        /// Adds top level test methods.
+        /// </summary>
+        /// <returns>The <see cref="TestRunner"/> used to execute the tests.</returns>
+        public TestRunner AddTopLevelTests()
+        {
+            return AddTestsFrom(_submission.GetType());
+        }
+
+        /// <summary>
         /// Adds tests from the given <typeparamref name="TFixture"/> type.
         /// </summary>
         /// <typeparam name="TFixture">The type for which to add tests.</typeparam>
         /// <returns>The <see cref="TestRunner"/> used to execute the tests.</returns>
         public TestRunner AddTestsFrom<TFixture>()
         {
-            var testFixtures = new List<Type>(new[] { typeof(TFixture) });
+            return AddTestsFrom(typeof(TFixture));
+        }
+
+        public TestRunner AddTestsFrom(Type fixtureType)
+        {
+            var testFixtures = new List<Type>(new[] { fixtureType });
             testFixtures.AddRange(_testFixtures);
             return new TestRunner(testFixtures, _formatter, _filter, _argumentProvider, _argumentsFormatter);
         }
+
 
         /// <summary>
         /// Returns a new <see cref="TestRunner"/> with a new <paramref name="summaryFormatter"/>
@@ -302,7 +344,17 @@ public static class ScriptUnit
             var testResults = new List<TestMethodResult>();
             RedirectedConsole.Capture();
 
-            var instance = Activator.CreateInstance(fixtureType);
+            object instance;
+
+            if (fixtureType.Name.Contains("Submission"))
+            {
+                instance = _submission;
+            }
+            else
+            {
+                instance = Activator.CreateInstance(fixtureType);
+            }
+
             try
             {
                 var testMethods = GetTestMethods(fixtureType).Where(tm => _filter(tm.Method));
@@ -375,7 +427,7 @@ public static class ScriptUnit
             {
                 var name = $"{testResult.Fixture}.{testResult.Name}";
                 Console.WriteLine($"{name.PadRight(maxWidth, ' ')} {(int)testResult.Duration.TotalMilliseconds}ms");
-                
+
                 if (testResult.TestCaseResults.Length > 1 && testResult.TestCaseResults[0].Arguments.Length > 0)
                 {
                     foreach (var testCase in testResult.TestCaseResults)
@@ -491,7 +543,7 @@ public static class ScriptUnit
             {
                 _captureCount--;
                 if (_captureCount == 0)
-                {                    
+                {
                     Console.SetOut(_oldStandardOutWriter);
                     Console.SetError(_oldStandardErrorWriter);
                 }

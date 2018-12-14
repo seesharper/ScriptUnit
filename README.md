@@ -74,6 +74,19 @@ public class SampleTests : IDisposable
 }
 ```
 
+### Top-level tests
+
+Tests does not even need to be in a class.  We can just start to write test methods directly in the script. 
+
+```c#
+return await AddTopLevelTests().AddFilter(m => m.Name.StartsWith("Should")); 
+
+public void ShouldBeOk()
+{
+    "Ok".Should().Be("Ok");
+}
+```
+
 
 
 ### Data driven test
